@@ -31,6 +31,10 @@ final class Telegram extends Base
         if ($to === 0) {
             $to = Config::obtain('telegram_chatid');
         }
+        
+        if (strval($to) === '-1') {
+            return;
+        }
 
         $sendMessage = [
             'chat_id' => $to,
@@ -53,6 +57,10 @@ final class Telegram extends Base
     {
         if ($to === 0) {
             $to = Config::obtain('telegram_chatid');
+        }
+        
+        if (strval($to) === '-1') {
+            return;
         }
 
         $sendMessage = [
@@ -82,6 +90,10 @@ final class Telegram extends Base
         if ($to === 0) {
             $to = Config::obtain('telegram_chatid');
         }
+        
+        if (strval($to) === '-1') {
+            return;
+        }
 
         $sendMessage = [
             'chat_id' => $to,
@@ -104,6 +116,10 @@ final class Telegram extends Base
     {
         if ($to === 0) {
             $to = Config::obtain('telegram_chatid');
+        }
+        
+        if (strval($to) === '-1') {
+            return;
         }
 
         $sendMessage = [
