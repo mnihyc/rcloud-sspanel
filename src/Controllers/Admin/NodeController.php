@@ -114,6 +114,14 @@ final class NodeController extends BaseController
         } else {
             $node->custom_config = '{}';
         }
+        
+        $ext_info = $request->getParam('ext_info') ?? '[]';
+
+        if ($ext_info !== '') {
+            $node->ext_info = $ext_info;
+        } else {
+            $node->ext_info = '[]';
+        }
 
         $node->node_speedlimit = $request->getParam('node_speedlimit');
         $node->type = $request->getParam('type') === 'true' ? 1 : 0;
@@ -208,6 +216,14 @@ final class NodeController extends BaseController
             $node->custom_config = $custom_config;
         } else {
             $node->custom_config = '{}';
+        }
+        
+        $ext_info = $request->getParam('ext_info') ?? '[]';
+
+        if ($ext_info !== '') {
+            $node->ext_info = $ext_info;
+        } else {
+            $node->ext_info = '[]';
         }
 
         $node->node_speedlimit = $request->getParam('node_speedlimit');

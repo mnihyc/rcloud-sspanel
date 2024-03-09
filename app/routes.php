@@ -108,6 +108,9 @@ return static function (Slim\App $app): void {
         $group->get('/clients/{name}', App\Controllers\User\ClientController::class . ':getClients');
         // 登出
         $group->get('/logout', App\Controllers\UserController::class . ':logout');
+        // 强制绑定 TG
+        $group->get('/must_link', App\Controllers\UserController::class . ':mustLink');
+        $group->post('/must_link/token', App\Controllers\UserController::class . ':mustLinkToken');
     })->add(new User());
 
     $app->group('/payment', static function (RouteCollectorProxy $group): void {

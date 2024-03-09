@@ -274,6 +274,15 @@ final class User extends Model
 
         return $this->save();
     }
+    
+    public function bindTG(string $uid, string $username): bool
+    {
+        $this->im_type = 4;
+        $this->im_value = $uid;
+        $this->im_username = $username;
+
+        return $this->save();
+    }
 
     /**
      * 发送每日流量报告

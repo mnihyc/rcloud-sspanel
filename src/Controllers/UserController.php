@@ -12,6 +12,7 @@ use App\Models\Node;
 use App\Models\OnlineLog;
 use App\Models\Payback;
 use App\Services\Auth;
+use App\Services\Cache;
 use App\Services\Captcha;
 use App\Services\Reward;
 use App\Services\Subscribe;
@@ -179,6 +180,40 @@ final class UserController extends BaseController
         return $response->withHeader('HX-Refresh', 'true')->withJson([
             'ret' => 1,
             'msg' => '切换成功',
+        ]);
+    }
+    
+    public function mustLink(ServerRequest $request, Response $response, array $args): Response|ResponseInterface
+    {
+        $user = $this->user;
+
+        return $response->write(
+            $this->view()
+                ->assign('user', $user)
+                ->fetch('user/must_link.tpl')
+        );
+    }
+    
+    public function mustLinkToken(ServerRequest $request, Response $response, array $args): Response|ResponseInterface
+    {
+        $user = $this->user;
+        
+        if ($user->im_type === 4) {
+            return ResponseHelper::error($response, '用户已绑定TG账号！');
+        }
+        
+        $redis = (new Cache())->initRedis();
+        $verify_token = $redis->get('telegram_token_verify_uid:' . strval($user->id));
+        if (! $verify_token) {
+            $verify_token = Tools::genRandomChar(32);
+            $redis->setex('telegram_token_verify_uid:' . strval($user->id), 600, $verify_token);
+            $redis->setex('telegram_token_verify:' . $verify_token, 600, strval($user->id));
+        }
+
+        return $response->withJson([
+            'ret' => 1,
+            'msg' => '获取成功',
+            'token' => $verify_token,
         ]);
     }
 

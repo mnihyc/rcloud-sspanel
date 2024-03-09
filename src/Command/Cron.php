@@ -51,8 +51,8 @@ EOL;
 
         // Run daily job
         if ($hour === Config::obtain('daily_job_hour') &&
-            $minute === Config::obtain('daily_job_minute') &&
-            time() - Config::obtain('last_daily_job_time') > 86399
+            //$minute === Config::obtain('daily_job_minute') && // 太严格！！
+            time() - Config::obtain('last_daily_job_time') > 86300
         ) {
             $jobs->cleanDb();
             $jobs->resetNodeBandwidth();

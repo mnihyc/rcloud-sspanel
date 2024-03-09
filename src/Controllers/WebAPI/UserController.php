@@ -51,6 +51,9 @@ final class UserController extends BaseController
             'is_banned',
             0
         )->where(
+            'im_type',
+            4
+        )->where(
             'class_expire',
             '>',
             date('Y-m-d H:i:s')

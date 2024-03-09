@@ -90,6 +90,10 @@
                                 </label>
                             </div>
                             <div class="form-group mb-3 row">
+                                <label class="form-label col-3 col-form-label">子节点配置</label>
+                                <dev id="ext_info"></dev>
+                            </div>
+                            <div class="form-group mb-3 row">
                                 <span class="col">显示此节点</span>
                                 <span class="col-auto">
                                     <label class="form-check form-check-single form-switch">
@@ -235,11 +239,14 @@
     });
 
     const container = document.getElementById('custom_config');
+    const container1 = document.getElementById('ext_info');
     let options = {
         modes: ['code', 'tree'],
     };
     const editor = new JSONEditor(container, options);
     editor.set({$node->custom_config})
+    const editor1 = new JSONEditor(container1, options);
+    editor1.set({$node->ext_info})
 
     $("#reset-bandwidth").click(function () {
         $.ajax({
@@ -287,6 +294,7 @@
                 type: $("#type").is(":checked"),
                 is_dynamic_rate: $("#is_dynamic_rate").is(":checked"),
                 custom_config: JSON.stringify(editor.get()),
+                ext_info: JSON.stringify(editor1.get()),
             },
             success: function (data) {
                 if (data.ret === 1) {

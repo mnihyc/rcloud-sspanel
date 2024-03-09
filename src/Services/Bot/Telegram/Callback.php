@@ -676,15 +676,18 @@ final class Callback
 
                 break;
             case 'unban_update':
-                // 提交群组解封
-                Message::sendPost(
-                    'unbanChatMember',
-                    [
-                        'chat_id' => Config::obtain('telegram_chatid'),
-                        'user_id' => $this->trigger_user['id'],
-                    ]
-                );
-
+                // 判断是否启用群组
+                if (strval(Config::obtain('telegram_chatid')) != "-1") {
+                    // 提交群组解封
+                    Message::sendPost(
+                        'unbanChatMember',
+                        [
+                            'chat_id' => Config::obtain('telegram_chatid'),
+                            'user_id' => $this->trigger_user['id'],
+                        ]
+                    );
+                }
+    
                 $this->answerCallbackQuery([
                     'text' => '已提交解封，如你仍无法加入群组，请联系管理员。',
                     'show_alert' => true,

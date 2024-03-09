@@ -19,6 +19,8 @@ final class Notification
      */
     public static function notifyAdmin($title = '', $msg = '', $template = 'warn.tpl'): void
     {
+        return; // 不要发送任何通知。
+        
         $admins = (new User())->where('is_admin', 1)->get();
 
         foreach ($admins as $admin) {
@@ -46,6 +48,8 @@ final class Notification
      */
     public static function notifyUser($user, $title = '', $msg = '', $template = 'warn.tpl'): void
     {
+        return; // 不要发送任何通知。
+        
         if ($user->contact_method === 1 || $user->im_type === 0) {
             $array = [
                 'user' => $user,
@@ -65,6 +69,8 @@ final class Notification
      */
     public static function notifyAllUser($title = '', $msg = '', $template = 'warn.tpl'): void
     {
+        return; // 不要发送任何通知。
+        
         $users = User::all();
 
         foreach ($users as $user) {

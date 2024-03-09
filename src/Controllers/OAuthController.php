@@ -38,9 +38,10 @@ final class OAuthController extends BaseController
     public function index(ServerRequest $request, Response $response, array $args): ResponseInterface
     {
         return match ($args['type']) {
-            'slack' => $this->slack($request, $response, $args),
-            'discord' => $this->discord($request, $response, $args),
-            'telegram' => $this->telegram($request, $response, $args),
+            // 不要使用此绑定功能
+            //'slack' => $this->slack($request, $response, $args),
+            //'discord' => $this->discord($request, $response, $args),
+            //'telegram' => $this->telegram($request, $response, $args),
             default => $response->withStatus(404)->write($this->view()->fetch('404.tpl')),
         };
     }

@@ -30,6 +30,7 @@ final class Telegram
             new Commands\StartCommand(),
             new Commands\UnbindCommand(),
             new Commands\CheckinCommand(),
+            new Commands\BindCommand(),
         ]);
 
         $bot->commandsHandler(true, $request);

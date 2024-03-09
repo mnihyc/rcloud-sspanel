@@ -49,11 +49,45 @@ final class Subscribe
             $query->whereIn('node_group', $group);
         }
 
-        return $query->where(static function ($query): void {
+        $nodes = $query->where(static function ($query): void {
             $query->where('node_bandwidth_limit', '=', 0)->orWhereRaw('node_bandwidth < node_bandwidth_limit');
         })->orderBy('node_class')
             ->orderBy('name')
             ->get();
+        
+        // 导入 ext_info 子节点
+        $nnodes = new Collection;
+        foreach ($nodes as $node) {
+            $nnodes[] = $node;
+            $ext_info = json_decode($node->ext_info, true, JSON_UNESCAPED_SLASHES);
+            if (count($ext_info) <= 0)
+                continue;
+            foreach ($ext_info as $snode) {
+                if (!array_key_exists('push', $snode) || $snode['push'] !== 'yes')
+                    continue;
+                if($snode['level'] > $user->class)
+                    continue;
+                // 覆盖 $node
+                $tnode = clone $node;
+                $tnode->name = '['.$snode['name'].'] '.$tnode->name;
+                //$tnode->node_class = $snode['level'];
+                //$tnode->sort = $snode['type'];
+                $tnode->server = $snode['server'];
+                $tnode->custom_config = $snode['custom_config'] ?? $node['custom_config'];
+                $tnode->ext_info = '[]';
+                if (array_key_exists('custom_override', $snode)) {
+                    // 传递 path
+                    $cc = json_decode($tnode->custom_config, true, JSON_UNESCAPED_SLASHES);
+                    foreach ($snode['custom_override'] as $key => $value) {
+                        $cc[$key] = $value;
+                    }
+                    $tnode->custom_config = json_encode($cc, JSON_UNESCAPED_SLASHES);
+                }
+                $nnodes[] = $tnode;
+            }
+        }
+        
+        return $nnodes;
     }
 
     public static function getContent($user, $type): string

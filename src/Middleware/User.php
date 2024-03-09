@@ -35,6 +35,11 @@ final class User implements MiddlewareInterface
         if ($user->is_banned && ! in_array($path, $bannedUserEnabledPages)) {
             return AppFactory::determineResponseFactory()->createResponse(302)->withHeader('Location', '/user/banned');
         }
+        
+        $unlinkedUserEnabledPages = ['/user/must_link', '/user/must_link/token'];
+        if ($user->im_type !== 4 && ! in_array($path, $unlinkedUserEnabledPages)) {
+            return AppFactory::determineResponseFactory()->createResponse(302)->withHeader('Location', '/user/must_link');
+        }
 
         $request = $request->withAttribute('user', $user);
 
