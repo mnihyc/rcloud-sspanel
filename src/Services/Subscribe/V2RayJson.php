@@ -101,7 +101,7 @@ final class V2RayJson extends Base
                             'security' => $security,
                             'securitySettings' => [
                                 'tls' => [
-                                    'server_name' => $security === ('tls' || 'auto') ? $host : '',
+                                    'server_name' => ($security === 'tls' || $security === 'auto') ? $host : '',
                                 ],
                             ],
                         ],
