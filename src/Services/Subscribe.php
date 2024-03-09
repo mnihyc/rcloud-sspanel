@@ -15,6 +15,7 @@ use App\Services\Subscribe\SS;
 use App\Services\Subscribe\Trojan;
 use App\Services\Subscribe\V2Ray;
 use App\Services\Subscribe\V2RayJson;
+use App\Services\Subscribe\Surfboard;
 use App\Utils\Tools;
 use Illuminate\Support\Collection;
 
@@ -95,7 +96,7 @@ final class Subscribe
         return self::getClient($type)->getContent($user);
     }
 
-    public static function getClient($type): Json|SS|SIP002|V2Ray|Trojan|Clash|SIP008|SingBox|V2RayJson
+    public static function getClient($type): Json|SS|SIP002|V2Ray|Trojan|Clash|SIP008|SingBox|V2RayJson|Surfboard
     {
         return match ($type) {
             'ss' => new SS(),
@@ -106,6 +107,7 @@ final class Subscribe
             'sip008' => new SIP008(),
             'singbox' => new SingBox(),
             'v2rayjson' => new V2RayJson(),
+            'surfboard' => new Surfboard(),
             default => new Json(),
         };
     }

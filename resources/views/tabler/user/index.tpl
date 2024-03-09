@@ -197,6 +197,9 @@
                                                 通用订阅（sip008）：<code>{$UniversalSub}/sip008</code>
                                             </p>
                                         {/if}
+                                        <p>
+                                            通用订阅（surfboard）：<code>{$UniversalSub}/surfboard</code>
+                                        </p>
                                         <div class="btn-list justify-content-start">
                                             <a data-clipboard-text="{$UniversalSub}/json"
                                                class="copy btn btn-primary">
@@ -220,6 +223,10 @@
                                                     复制通用订阅（sip008）
                                                 </a>
                                             {/if}
+                                            <a data-clipboard-text="{$UniversalSub}/surfboard"
+                                               class="copy btn btn-primary">
+                                                复制通用订阅（surfboard）
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
