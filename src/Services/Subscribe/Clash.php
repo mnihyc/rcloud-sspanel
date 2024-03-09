@@ -110,6 +110,15 @@ final class Clash extends Base
                     if ($network === 'httpupgrade') {
                         $network = 'ws';
                     }
+                    // 合并 path
+                    if (! empty($node_custom_config['path'])) {
+                        $ws_opts = $ws_opts ?? [];
+                        $ws_opts['path'] = $node_custom_config['path'];
+                        if (! empty($host)) {
+                            $ws_opts['headers'] = $ws_opts['headers'] ?? [];
+                            $ws_opts['headers']['Host'] = $host;
+                        }
+                    }
 
                     $node = [
                         'name' => $node_raw->name,
