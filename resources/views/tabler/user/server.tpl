@@ -51,6 +51,13 @@
                                                                     {$server["node_bandwidth_limit"]}
                                                                 </span>
                                                             </h2>
+                                                            <h5 class="text-secondary">
+                                                                {$server["ext_names"]}
+                                                                <span class="card-subtitle my-2"
+                                                                      style="font-size: 14px;">
+                                                                    ({$server["node_speedlimit"]} Mbps)
+                                                                </span>
+                                                            </h5>
                                                             <div class="text-secondary">
                                                                 <ul class="list-inline list-inline-dots mb-0">
                                                                     <li class="list-inline-item">

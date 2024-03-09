@@ -50,9 +50,13 @@ final class Subscribe
             $query->whereIn('node_group', $group);
         }
 
-        $nodes = $query->where(static function ($query): void {
-            $query->where('node_bandwidth_limit', '=', 0)->orWhereRaw('node_bandwidth < node_bandwidth_limit');
-        })->orderBy('node_class')
+        // 显示流量耗尽节点
+        if (! $show_all_nodes) {
+            $query->where(static function ($query): void {
+                $query->where('node_bandwidth_limit', '=', 0)->orWhereRaw('node_bandwidth < node_bandwidth_limit');
+            });
+        }
+        $nodes = $query->orderBy('node_class')
             ->orderBy('name')
             ->get();
         
@@ -60,32 +64,39 @@ final class Subscribe
         $nnodes = new Collection;
         foreach ($nodes as $node) {
             $nnodes[] = $node;
+            $node['ext_names'] = array();
+            $ext_names = array();
             $ext_info = json_decode($node->ext_info, true, JSON_UNESCAPED_SLASHES);
             if (count($ext_info) <= 0)
                 continue;
             foreach ($ext_info as $snode) {
                 if (!array_key_exists('push', $snode) || $snode['push'] !== 'yes')
                     continue;
-                if($snode['level'] > $user->class)
+                if(($snode['level'] ?? 0) > $user->class)
                     continue;
-                // 覆盖 $node
-                $tnode = clone $node;
-                $tnode->name = '['.$snode['name'].'] '.$tnode->name;
-                //$tnode->node_class = $snode['level'];
-                //$tnode->sort = $snode['type'];
-                $tnode->server = $snode['server'];
-                $tnode->custom_config = $snode['custom_config'] ?? $node['custom_config'];
-                $tnode->ext_info = '[]';
-                if (array_key_exists('custom_override', $snode)) {
-                    // 传递 path
-                    $cc = json_decode($tnode->custom_config, true, JSON_UNESCAPED_SLASHES);
-                    foreach ($snode['custom_override'] as $key => $value) {
-                        $cc[$key] = $value;
+                // 若在面板前端显示，则仅提取名称
+                $ext_names[] = $snode['name'];
+                // 否则，覆盖 $node，展开所有子节点
+                if (! $show_all_nodes) { // <== 默认该参数为 true 时认为仅在面板前端显示
+                    $tnode = clone $node;
+                    $tnode->name = '['.$snode['name'].'] '.$tnode->name;
+                    //$tnode->node_class = $snode['level'];
+                    //$tnode->sort = $snode['type'];
+                    $tnode->server = $snode['server'];
+                    $tnode->custom_config = $snode['custom_config'] ?? $node['custom_config'];
+                    $tnode->ext_info = '[]';
+                    if (array_key_exists('custom_override', $snode)) {
+                        // 传递 path
+                        $cc = json_decode($tnode->custom_config, true, JSON_UNESCAPED_SLASHES);
+                        foreach ($snode['custom_override'] as $key => $value) {
+                            $cc[$key] = $value;
+                        }
+                        $tnode->custom_config = json_encode($cc, JSON_UNESCAPED_SLASHES);
                     }
-                    $tnode->custom_config = json_encode($cc, JSON_UNESCAPED_SLASHES);
+                    $nnodes[] = $tnode;
                 }
-                $nnodes[] = $tnode;
             }
+            $node['ext_names'] = $ext_names;
         }
         
         return $nnodes;

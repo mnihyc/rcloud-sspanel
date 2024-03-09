@@ -36,6 +36,8 @@ final class ServerController extends BaseController
                 'node_bandwidth' => Tools::autoBytes($node->node_bandwidth),
                 'node_bandwidth_limit' => $node->node_bandwidth_limit === 0 ? '无限制' :
                     Tools::autoBytes($node->node_bandwidth_limit),
+                'ext_names' => implode(" / ", $node->ext_names),
+                'node_speedlimit' => $node->node_speedlimit,
             ];
         }
 
