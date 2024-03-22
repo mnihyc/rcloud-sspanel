@@ -138,6 +138,6 @@ final class PasswordController extends BaseController
 
         $redis->del('password_reset:' . $token);
 
-        return ResponseHelper::success($response, '重置成功');
+        return ResponseHelper::success($response, '重置成功，请使用新密码登录');
     }
 }

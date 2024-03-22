@@ -21,7 +21,7 @@
                 </div>
                 <div class="form-footer">
                     <button class="btn btn-primary w-100"
-                            hx-post="{ location.pathname }" hx-swap="none"
+                            hx-post="" hx-swap="none"
                             hx-vals='js:{
                             password: document.getElementById("password").value,
                             confirm_password: document.getElementById("confirm_password").value, }'>
