@@ -100,6 +100,25 @@ final class Subscribe
             }
             $node['ext_names'] = $ext_names;
         }
+
+        foreach ($nnodes as $node) {
+            $c = json_decode($node->custom_config, true);
+            // 动态端口支持
+            if (array_key_exists('offset_port_user_dynamic', $c) && !is_null($range=$c['offset_port_user_dynamic'])) {
+                if (is_string($range)) {
+                    [$port_min, $port_max] = array_map('intval', array_map('trim', explode('-', $range)));
+                } else if (is_array($range)) {
+                    if (count($range) == 2)
+                        [$port_min, $port_max] = [$range[0], $range[1]];
+                    else
+                        [$port_min, $port_max] = [$range[0], $range[0]];
+                } else {
+                    $port_min = $port_max = intval($range);
+                }
+                $c['offset_port_user'] = rand($port_min, $port_max);
+            }
+            $node->custom_config = json_encode($c, JSON_UNESCAPED_SLASHES);
+        }
         
         return $nnodes;
     }
