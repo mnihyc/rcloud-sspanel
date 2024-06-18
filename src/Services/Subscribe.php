@@ -19,6 +19,8 @@ use App\Services\Subscribe\Surfboard;
 use App\Utils\Tools;
 use Illuminate\Support\Collection;
 
+use const JSON_UNESCAPED_SLASHES;
+
 final class Subscribe
 {
     public static function getUniversalSubLink($user): string
@@ -66,7 +68,7 @@ final class Subscribe
             $nnodes[] = $node;
             $node['ext_names'] = array();
             $ext_names = array();
-            $ext_info = json_decode($node->ext_info, true, JSON_UNESCAPED_SLASHES);
+            $ext_info = json_decode($node->ext_info, true);
             if (count($ext_info) <= 0)
                 continue;
             foreach ($ext_info as $snode) {
@@ -87,7 +89,7 @@ final class Subscribe
                     $tnode->ext_info = '[]';
                     if (array_key_exists('custom_override', $snode)) {
                         // 传递 path
-                        $cc = json_decode($tnode->custom_config, true, JSON_UNESCAPED_SLASHES);
+                        $cc = json_decode($tnode->custom_config, true);
                         foreach ($snode['custom_override'] as $key => $value) {
                             $cc[$key] = $value;
                         }
